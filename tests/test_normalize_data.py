@@ -27,3 +27,13 @@ class TestNormalizeData(unittest.TestCase):
 
         row = next(generate_csv_dicts())
         unflatten_row(row)
+
+    def test_decode(self):
+        """
+        Test that unflatten runs without any exceptions.
+        """
+
+        row = next(generate_csv_dicts())
+        row = unflatten_row(row)
+        decode_row(row)
+        self.assertEqual(row['MONRACE'], 'black')

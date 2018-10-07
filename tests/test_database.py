@@ -5,7 +5,7 @@ import psycopg2
 class TestDatabase(unittest.TestCase):
 
     def test_connection(self):
-        conn = psycopg2.connect(user='postgres', password='postgres', host='localhost')
+        conn = psycopg2.connect(dbname='ussc', user='postgres', password='postgres', host='localhost')
         cur = conn.cursor()
         cur.execute("SELECT 1")
         row = cur.fetchone()

@@ -1,0 +1,26 @@
+{
+  "MONRACE": {
+    "1": "white",
+    "2": "black",
+    "3": "native american",
+    "4": "asian",
+    "5": "multi-racial",
+    "7": "other",
+    "8": null,
+    "9": "native american",
+    "10": "native american"
+  },
+
+  "HISPORIG": {
+    "0": null,
+    "1": "non-hispanic",
+    "2": "hispanic"
+  },
+
+  "WEAPSOC": {
+    "0": false,
+    "1": true
+  }
+}
+
+

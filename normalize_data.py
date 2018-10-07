@@ -3,10 +3,13 @@ import os
 import string
 import json
 
-HEADERS_PATH = 'data/headers.csv'
-with open(HEADERS_PATH, 'r') as headers_file:
+with open('data/headers.csv', 'r') as headers_file:
     header_reader = csv.reader(headers_file)
     HEADERS = list(next(header_reader))
+
+
+with open('data/dictionary.json', 'r') as mappings_file:
+    MAPPINGS = json.load(mappings_file)
 
 
 def get_prefixes():
@@ -41,7 +44,7 @@ def get_array_dict():
     return arrays, single_headers
 
 
-array_headers, single_headers = get_array_dict()
+ARRAY_HEADERS, SINGLE_HEADERS = get_array_dict()
 
 
 def generate_csv_dicts():
@@ -56,11 +59,11 @@ def unflatten_row(row):
 
     # iterate through variable stubs (represented as keys of array_headers)
     # and consolidate the cells corresponding to stubbed variables
-    for k in array_headers.keys():
+    for k in ARRAY_HEADERS.keys():
         if k not in flat.keys():
             flat[k] = []
         # array_headers[k] is the list of variable suffixes (i.e., [1,2,3,4])
-        for val in array_headers[k]:
+        for val in ARRAY_HEADERS[k]:
             # create the stub + suffix (i.e., DESCRIP2)
             curr_header = k + str(val)
             # take the value from the stub + suffix variable and append it to
@@ -69,11 +72,16 @@ def unflatten_row(row):
 
     # now iterate through variables that are independent and do not have stubs
     # (i.e., NEWRACE) and add them (as-is) to the new dictionary
-    for single in single_headers:
+    for single in SINGLE_HEADERS:
         flat[single] = row[single]
     # return the new dictionary
     return flat
 
 
+def decode_row(row):
+    for k, mapping in MAPPINGS.items():
+        row[k] = mapping.get(row[k])
+
+
 def unflatten_rows():
-    return [unflatten_row(row) for row in generate_csv_dicts()]
+    return [decode_row(unflatten_row(row)) for row in generate_csv_dicts()]
