@@ -37,3 +37,8 @@ class TestNormalizeData(unittest.TestCase):
         row = unflatten_row(row)
         decode_row(row)
         self.assertEqual(row['MONRACE'], 'black')
+
+    def test_read_file(self):
+        for count, _ in enumerate(generate_lines()):
+            if count % 1000 == 0:
+                print(count)

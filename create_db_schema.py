@@ -2,7 +2,6 @@ import psycopg2
 from normalize_data import ARRAY_HEADERS, SINGLE_HEADERS
 
 
-
 column_types = {
     'WEAPSOC': "boolean"
 }
@@ -44,3 +43,6 @@ cur = conn.cursor()
 cur.execute(CREATE_TABLE_STATEMENT)
 cur.close()
 conn.commit()
+
+
+

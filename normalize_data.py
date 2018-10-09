@@ -47,9 +47,21 @@ def get_array_dict():
 ARRAY_HEADERS, SINGLE_HEADERS = get_array_dict()
 
 
-def generate_csv_dicts():
-    with open(os.path.join('data', 'data.csv'), 'r') as f:
-        for line in f:
+def generate_lines():
+    with open(os.path.join('data', 'data.csv'), 'r', encoding='latin-1') as f:
+        has_next = True
+        while has_next:
+            try:
+                yield next(f)
+            except UnicodeDecodeError as e:
+                print("line could not be read in. cause: {}".format(e))
+            except StopIteration:
+                has_next = False
+
+
+def generate_csv_dicts(start_row):
+    for count, line in enumerate(generate_lines()):
+        if count >= start_row:
             row = line.rstrip('\n').split(',')
             yield {header: value for header, value in zip(HEADERS, row)}
 
@@ -81,7 +93,10 @@ def unflatten_row(row):
 def decode_row(row):
     for k, mapping in MAPPINGS.items():
         row[k] = mapping.get(row[k])
+    return row
 
 
-def unflatten_rows():
-    return [decode_row(unflatten_row(row)) for row in generate_csv_dicts()]
+def unflatten_rows(start_row):
+    for row in generate_csv_dicts(start_row):
+        yield decode_row(unflatten_row(row))
+
